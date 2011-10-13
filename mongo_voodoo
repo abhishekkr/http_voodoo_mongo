@@ -9,23 +9,23 @@
 
 start() {
         echo "Starting Mongo Voodoo HTTP server: "
-        /etc/http_voodoo_mongo/http_voodoo_mongo.rb &
-        `ps aux | grep http_voodoo_mongo | grep -v init.d | grep -v grep | awk '{print $2}' > /var/run/http_voodoo_mongo`
-        touch /var/lock/subsys/http_voodoo_mongo
+        /etc/http_voodoo_mongo/mongo_voodoo.rb &
+        `ps aux | grep mongo_voodoo | grep -v init.d | grep -v grep | awk '{print $2}' > /var/run/mongo_voodoo`
+        touch /var/lock/subsys/mongo_voodoo
         echo
 }
 
 stop() {
         echo "Stopping Mongo Voodoo HTTP server: "
-        `cat /var/run/http_voodoo_mongo | awk '{system("kill -9 "$1"");}'`
-        rm -f /var/lock/subsys/http_voodoo_mongo
+        `cat /var/run/mongo_voodoo | awk '{system("kill -9 "$1"");}'`
+        rm -f /var/lock/subsys/mongo_voodoo
         echo
 }
 
 status() {
-       if [ -e /var/lock/subsys/http_voodoo_mongo ]; then
-         pid=`ps aux | grep http_voodoo_mongo | grep -v init.d | grep -v grep | awk '{print $2}'`
-         pid_in_file=`cat /var/run/http_voodoo_mongo`
+       if [ -e /var/lock/subsys/mongo_voodoo ]; then
+         pid=`ps aux | grep mongo_voodoo | grep -v init.d | grep -v grep | awk '{print $2}'`
+         pid_in_file=`cat /var/run/mongo_voodoo`
          if [ "$pid" == "$pid_in_file" ]; then
            echo "Mongo Voodoo HTTP Server is running"
          else
