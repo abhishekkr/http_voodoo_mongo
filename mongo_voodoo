@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# chkconfig: 35 90 12
+# description: Mongo Voodoo HTTP server
+#
+
+# Get function from functions library
+. /etc/init.d/functions
+
+start() {
+        echo "Starting Mongo Voodoo HTTP server: "
+        /etc/http_voodoo_mongo/http_voodoo_mongo.rb &
+        `ps aux | grep http_voodoo_mongo | grep -v init.d | grep -v grep | awk '{print $2}' > /var/run/http_voodoo_mongo`
+        touch /var/lock/subsys/http_voodoo_mongo
+        echo
+}
+
+stop() {
+        echo "Stopping Mongo Voodoo HTTP server: "
+        `cat /var/run/http_voodoo_mongo | awk '{system("kill -9 "$1"");}'`
+        rm -f /var/lock/subsys/http_voodoo_mongo
+        echo
+}
+
+status() {
+       if [ -e /var/lock/subsys/http_voodoo_mongo ]; then
+         pid=`ps aux | grep http_voodoo_mongo | grep -v init.d | grep -v grep | awk '{print $2}'`
+         pid_in_file=`cat /var/run/http_voodoo_mongo`
+         if [ "$pid" == "$pid_in_file" ]; then
+           echo "Mongo Voodoo HTTP Server is running"
+         else
+           echo "Mongo Voodoo Server is down yet Subsys file is locked."
+         fi
+       else
+         echo "Mongo Voodoo HTTP Server is stopped"
+       fi
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status
+        ;;
+  restart|reload|condrestart)
+        stop
+        start
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|restart|reload|status}"
+        exit 1
+esac
+
+exit 0
