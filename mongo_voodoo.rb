@@ -1,4 +1,40 @@
+#!/usr/bin/env ruby
+
 require 'socket'
+
+class WebPages
+  def home
+    <<-HOME_HTML
+         <html>
+           <head>
+           </head>
+           <body>
+             <div style="text-align:center">
+               <b>HTTP Voodoo MongoDB</b>
+               <br/><br/><br/>
+               control your remote/local MongoDB instances over HTTP
+             </div>
+           </body>
+         </html>
+    HOME_HTML
+  end
+
+  def err404
+    <<-ERR404_HTML
+         <html>
+           <head>
+           </head>
+           <body>
+             <div style="text-align:center">
+               <b>HTTP Voodoo MongoDB</b>
+               <br/><br/><br/>
+               Can't understand what to do with your request.
+             </div>
+           </body>
+         </html>
+    ERR404_HTML
+  end
+end
 
 class MongoRESPONSE
   def initialize(session,result)
@@ -76,13 +112,14 @@ class MongoREQUEST
 
   def service_logic
     begin
+      return WebPages.new.home if @request===""
       get_db
       get_request_params
       result = case @action
       when "mongodump"
         result = %x{mongodump --host=localhost:#{@port} --db=#{@db} #{@authentication} --out=#{@dir} #{@more_switch}; echo $? }
       else
-        "No Action Specified"
+        WebPages.new.err404 + "404"
       end
       result
     rescue
