@@ -12,5 +12,28 @@
  a REST API for Remote Controlling MongoDB Server over HTTP using the 
  same 'authentication' as of MongoDB Server
 
+
+[] need to access the service at 
+   HTTP_URL => http://<<MongoDB_IP>>:30303/
+
+===========================================================================
+
+[] Optional GET Request Parameters
+	<<name>> the username permitted access
+	<<pass>> the password linked to username
+	<<port>> the port at which MongoDB Server is running
+
+===========================================================================
+
+::MongoDB Database Backup
+
+   http://<<MongoDB_IP>>:30303/<<db_name>>?action=dump
+          &dir=<<dir>>&more_switch=<<more_switch>>
+          &userniame=<<username>>&password=<<password>>&port=<<port>>
+
+    [] GET Parameters
+        <<dir>>         the directory to take in backup using mongodump
+        <<more_switch>> any options you wanna add to mongodump command 
+
 ===========================================================================
 ===========================================================================
